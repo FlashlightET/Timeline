@@ -5,7 +5,8 @@ A tool for creating SVG timelines from JSON.
 
 You will be able to create timelines that look like this:
 
-![simple timeline example](http://jasonreisman.github.io/timeline/simple_timeline.png)
+![simple timeline example](https://user-images.githubusercontent.com/29938499/120113468-9665eb80-c148-11eb-913c-3d110ae35f43.png)
+
 
 from JSON that looks like this:
 
@@ -27,8 +28,8 @@ from JSON that looks like this:
 		["Event E", "Oct 14, 2015"]
 	],
 	"eras" : [
-		["Era 1", "12pm Oct 8, 2015", "3am Oct 12, 2015", "#CD3F85"],
-		["Era 2", "8am Oct 12, 2015", "12am Oct 15, 2015", "#C0C0FF"]
+		["Era 1", "12pm Oct 8, 2015", "3am Oct 21, 2015", "#CD3F85", -50],
+		["Era 2", "8am Oct 12, 2015", "12am Oct 15, 2015", "#C0C0FF", -40]
 	]
 }
 ```
@@ -63,15 +64,15 @@ or, with a custom callout color:
 ```
 #### Eras
 
-Eras are described in the `eras` list.  Like the callout list, each entry in the eras list is itself a list with either three or four values.  The first three are required while the fourth is option; all values are strings.  The first value is a text description of the era (e.g., "Summer"), while the second and third values are the start and end date/times of the era, respectively (e.g., "6/21/15 12am", and "9/20/15 11:59pm").  The optional fourth value can specify a color for the era, either a color hexcode starting with a # or a SVG color alias. 
+Eras are described in the `eras` list.  Like the callout list, each entry in the eras list is itself a list with five values.  The first three are required while the fourth is option; all values are strings.  The first value is a text description of the era (e.g., "Summer"), while the second and third values are the start and end date/times of the era, respectively (e.g., "6/21/15 12am", and "9/20/15 11:59pm").  The fourth value can specify a color for the era, either a color hexcode starting with a # or a SVG color alias. The fifth value specifies the height of the era from y=80, to allow for overlapping (inclusive) eras. Negative values place it upwards.
 
 Example:
 ```JSON
-["Summer 2015", "6/21/15 12am", "9/20/15 11:59pm"]
+["Summer 2015", "6/21/15 12am", "9/20/15 11:59pm", "Gray", -50]
 ```
 or, with a custom era color:
 ```JSON
-["Summer 2015", "6/21/15 12am", "9/20/15 11:59pm", "Orange"]
+["Summer 2015", "6/21/15 12am", "9/20/15 11:59pm", "Orange", -40]
 ```
 
 ### Prerequisites
