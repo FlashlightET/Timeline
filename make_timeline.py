@@ -53,7 +53,7 @@ class Timeline:
 	def build(self):
 		# MAGIC NUMBER: y_era
 		# draw era label and markers at this height
-		y_era = 10
+		y_era = 80
 		# create main axis and callouts, 
 		# keeping track of how high the callouts are
 		self.create_main_axis()
@@ -94,6 +94,7 @@ class Timeline:
 		for era in eras_data:
 			# extract era data
 			name = era[0]
+			distanc = era[4]
 			t0 = self.datetime_from_string(era[1])
 			t1 = self.datetime_from_string(era[2])
 			fill = era[3] if len(era) > 3 else Colors.gray
@@ -106,17 +107,17 @@ class Timeline:
 			percent_width1 = (t1[0] - self.date0).total_seconds()/self.total_secs
 			x0 = int(percent_width0*self.width + 0.5)
 			x1 = int(percent_width1*self.width + 0.5)
-			rect = self.drawing.add(self.drawing.rect((x0, 0), (x1-x0, height)))
+			rect = self.drawing.add(self.drawing.rect((x0, distanc+80), (x1-x0, height-distanc)))
 			rect.fill(fill, None, 0.15)	
-			line0 = self.drawing.add(self.drawing.line((x0,0), (x0, y_axis), stroke=fill, stroke_width=0.5))
+			line0 = self.drawing.add(self.drawing.line((x0,distanc+80), (x0, y_axis-distanc), stroke=fill, stroke_width=0.5))
 			line0.dasharray([5, 5])
-			line1 = self.drawing.add(self.drawing.line((x1,0), (x1, y_axis), stroke=fill, stroke_width=0.5))
+			line1 = self.drawing.add(self.drawing.line((x1,distanc+80), (x1, y_axis-distanc), stroke=fill, stroke_width=0.5))
 			line1.dasharray([5, 5])
 			# create horizontal arrows and text
-			horz = self.drawing.add(self.drawing.line((x0, y_era), (x1, y_era), stroke=fill, stroke_width=0.75))
+			horz = self.drawing.add(self.drawing.line((x0, y_era+distanc), (x1, y_era+distanc), stroke=fill, stroke_width=0.75))
 			horz['marker-start'] = start_marker.get_funciri()
 			horz['marker-end'] = end_marker.get_funciri()
-			self.drawing.add(self.drawing.text(name, insert=(0.5*(x0 + x1), y_era - self.text_fudge[1]), stroke='none', fill=fill, font_family="Helevetica", font_size="6pt", text_anchor="middle"))
+			self.drawing.add(self.drawing.text(name, insert=(0.5*(x0 + x1), y_era - self.text_fudge[1]+distanc), stroke='none', fill=fill, font_family="Arial", font_size="6pt", text_anchor="middle"))
 
 	def get_markers(self, color):
 		# create or get marker objects
@@ -176,8 +177,8 @@ class Timeline:
 		# add label
 		fill = kwargs.get('fill', Colors.gray)
 		transform = "rotate(180, %i, 0)" % (x)
-		self.g_axis.add(self.drawing.text(label, insert=(x, -2*dy), stroke='none', fill=fill, font_family='Helevetica', font_size='6pt', text_anchor='end', writing_mode='tb', transform=transform))			
-		h = self.get_text_metrics('Helevetica', 6, label)[0] + 2*dy
+		self.g_axis.add(self.drawing.text(label, insert=(x, -2*dy), stroke='none', fill=fill, font_family='Arial', font_size='6pt', text_anchor='end', writing_mode='tb', transform=transform))			
+		h = self.get_text_metrics('Arial', 6, label)[0] + 2*dy
 		self.max_label_height = max(self.max_label_height, h)
 
 	def create_callouts(self):
@@ -210,7 +211,7 @@ class Timeline:
 			# figure out what 'level" to make the callout on 
 			k = 0
 			i = len(prev_x) - 1
-			left = x - (self.get_text_metrics('Helevetica', 6, event)[0] + self.callout_size[0] + self.text_fudge[0])
+			left = x - (self.get_text_metrics('Arial', 6, event)[0] + self.callout_size[0] + self.text_fudge[0])
 			while left < prev_x[i] and i >= 0:
 				k = max(k, prev_level[i] + 1)
 				i -= 1
@@ -219,7 +220,7 @@ class Timeline:
 			#self.drawing.add(self.drawing.circle((left, y), stroke='red', stroke_width=2))		
 			path_data = 'M%i,%i L%i,%i L%i,%i' % (x, 0, x, y, x - self.callout_size[0], y)
 			self.g_axis.add(self.drawing.path(path_data, stroke=event_color, stroke_width=1, fill='none'))
-			self.g_axis.add(self.drawing.text(event, insert=(x - self.callout_size[0] - self.text_fudge[0], y + self.text_fudge[1]), stroke='none', fill=event_color, font_family='Helevetica', font_size='6pt', text_anchor='end'))
+			self.g_axis.add(self.drawing.text(event, insert=(x - self.callout_size[0] - self.text_fudge[0], y + self.text_fudge[1]), stroke='none', fill=event_color, font_family='Arial', font_size='6pt', text_anchor='end'))
 			self.add_axis_label(event_date, str(event_date[0]), tick=False, fill=Colors.black)
 			self.g_axis.add(self.drawing.circle((x, 0), r=4, stroke=event_color, stroke_width=1, fill='white'))
 			prev_x.append(x)
